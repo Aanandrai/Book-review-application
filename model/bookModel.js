@@ -26,5 +26,5 @@ const bookSchema=new mongoose.Schema({
 });
 
 const bookModel=mongoose.model("bookModel",bookSchema);
-model.exports=boolModel;
+module.exports=bookModel;
 
