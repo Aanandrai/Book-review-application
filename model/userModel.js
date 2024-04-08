@@ -22,9 +22,15 @@ const userSchema= new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:"reviewModel" 
         }
-    ]
+    ],
+
+    role:{
+        type:String,
+        emun:["admin", "user"],
+        default:"user"
+    }
 });
 
 const userModel=mongoose.model("userModel",userSchema);
 
-model.exports=userModel;
+module.exports=userModel;

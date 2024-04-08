@@ -69,7 +69,7 @@ exports.getByIsbn=(req,res)=>{
 function searchBooksByISBN(isbn) {
     return new Promise((resolve, reject) => {
         // Query the database to find books by ISBN
-        bookModel.find({ isbn: isbn })
+        bookModel.find({ ISBN: isbn })
             .then(books => {
                 resolve(books);
             })
@@ -82,7 +82,7 @@ function searchBooksByISBN(isbn) {
 // search book by author name 
 exports.getBookByAuthor= async(req,res)=>{
     try{
-        const author=req.param.author;
+        const author=req.params.author;
 
         if(!author){
             return res.json({
@@ -123,6 +123,25 @@ exports.getAllBookByTitle=async(req,res)=>{
         };
 
         const data=await bookModel.find({title:title});
+
+        return res.json({
+            success:true,
+            data:data
+        })
+    }
+    catch(err){
+        return res.json({
+            success:false,
+            error:err.message
+        })
+    }
+}
+
+exports.addBook= async(req,res)=>{
+    try{
+        const {title , author, ISBN }=req.body;
+
+        const data= await bookModel.create({title,author,ISBN });
 
         return res.json({
             success:true,

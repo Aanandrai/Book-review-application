@@ -1,5 +1,5 @@
 const express=require("express");
-const {getAllBooks, getByIsbn,getBookByAuthor,getAllBookByTitle}=require("../controller/bookController");
+const {getAllBooks, getByIsbn,getBookByAuthor,getAllBookByTitle,addBook}=require("../controller/bookController");
 
 const bookRouter=express.Router();
 
@@ -8,12 +8,7 @@ bookRouter.get("/:isbn",getByIsbn);
 bookRouter.get("/allBook/:author",getBookByAuthor);
 bookRouter.get("/title/:name",getAllBookByTitle);
 
-// bookRouter.get("./getReview/",getAllReview);
-// bookRouter.get("/getReview/:isbn",getReviewByIsbn);
-
-// bookRouter.post("/addReview",addReview);
-// bookRouter.patch("/updateReview",updateReview);
-// bookRouter.delete("/deleteReview",deleteReview);
+bookRouter.post("/add",addBook);
 
 
 module.exports=bookRouter;
