@@ -58,7 +58,6 @@ exports.getByIsbn=(req,res)=>{
             }
         })
         .catch(err => {
-            console.error('Error searching books by ISBN:', err);
             return res.status(500).json({ 
                 success:false,
                 error: 'Internal server error'

@@ -31,8 +31,8 @@ exports.getReviewByIsbn=async(req,res)=>{
             });
         };
 
-        let data=await bookModel.findOne({ISBN:isbn});
-        if(data.review.length==0){
+        let data=await bookModel.findOne({ISBN:isbn}).populate({path:'review'});
+        if(data.length==0){
             return res.json({
                 success:true,
                 data:data.review,
@@ -156,7 +156,7 @@ exports.updateReview=async(req,res)=>{
                 error:"Only owner can update the review"
             })
         }
-        const data= await reviewModel.findByIdAndUpdate(review_id,{description});
+        const data= await reviewModel.findByIdAndUpdate(review_id,{description},{new:true});
 
         if(!data){
             return res.json({
