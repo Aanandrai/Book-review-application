@@ -21,8 +21,7 @@ const userSchema= new mongoose.Schema({
     review:[{
         type:mongoose.Schema.ObjectId,
         ref:"reviewModel" 
-        }
-    ],
+        }],
 
     role:{
         type:String,

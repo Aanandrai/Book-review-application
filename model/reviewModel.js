@@ -7,10 +7,10 @@ const reviewSchema=new mongoose.Schema({
         require:true
     },
 
-    // user:{
-    //     type:mongoose.Schema.ObjectId,
-    //     ref:"userModel"
-    // },
+    user:{
+        type:mongoose.Schema.ObjectId,
+        ref:"userModel"
+    },
 
     book:{
         type:mongoose.Schema.ObjectId,

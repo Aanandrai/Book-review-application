@@ -65,10 +65,10 @@ exports.addReview= async(req,res)=>{
             });
         }
 
-        const data= await reviewModel.create({description,/*user,*/book});
+        const data= await reviewModel.create({description,user,book});
 
         const updatebook =await bookModel.findByIdAndUpdate(book, {$push :{review:data._id}}, {new:true});
-        // const updateuser=await userModel.findOneAndUpdate(user ,{$push :{review:data._id}}, {new:true});
+        const updateuser=await userModel.findByIdAndUpdate(user ,{$push :{review:data._id}}, {new:true});
 
         return res.json({
             success:true,
@@ -98,7 +98,65 @@ exports.deleteReview=async(req,res)=>{
             });
         };
 
-        const data= await reviewModel.findByIdAndDelete(review_id);
+        const review=await reviewModel.findById(review_id);
+
+        if(req.payload.role=="admin" || req.payload.id==review.user){
+            const data= await reviewModel.findByIdAndDelete(review_id);
+
+            if(!data){
+                return res.json({
+                    success:false,
+                    message:"this review id doesnot exist"
+                });
+            }
+
+            const updateuser= await userModel.findByIdAndUpdate(data.user, {$pull : {review:review_id}},{new:true});
+            const updatepost= await bookModel.findByIdAndUpdate(data.book,{$pull: {review:review_id}}, {new:true});
+
+            return res.json({
+                success:true,
+                data:data
+            });
+        }
+        
+
+        return res.json({
+            success:false,
+            error:"only review's owner or admin can delete the review"
+        })
+    }
+    catch(err){
+
+        return res.json({
+            success:false,
+            error:err.message,
+            message:"error is deleteReview"
+        })
+    
+    }
+}
+
+
+exports.updateReview=async(req,res)=>{
+    try{
+        const {review_id,description}=req.body;
+
+        if(!review_id){
+            return res.json({
+                success:false,
+                message:"review_id is empty"
+            });
+        };
+
+        const review=await reviewModel.findById(review_id);
+       
+        if(req.payload.id !=review.user){
+            return res.json({
+                success:false,
+                error:"Only owner can update the review"
+            })
+        }
+        const data= await reviewModel.findByIdAndUpdate(review_id,{description});
 
         if(!data){
             return res.json({
@@ -107,12 +165,9 @@ exports.deleteReview=async(req,res)=>{
             });
         }
 
-        // const updateuser= await userModel.findByIdAndUpdate(data.user, {$pull : {review:review_id}},{new:true});
-        const updatepost= await bookModel.findByIdAndUpdate(data.book,{$pull: {review:review_id}}, {new:true});
-
         return res.json({
             success:true,
-            data:updatepost
+            data:data
         });
     }
     catch(err){
@@ -120,7 +175,7 @@ exports.deleteReview=async(req,res)=>{
         return res.json({
             success:false,
             error:err.message,
-            message:"error is deleteReview"
+            message:"error is updateReview"
         })
     
     }
